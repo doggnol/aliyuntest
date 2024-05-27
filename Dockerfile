@@ -1,8 +1,13 @@
-# 第一阶段:完整的构建环境
-FROM python:latest
+FROM arm64v8/python:3.9.5-alpine
 
-# 第二阶段:将代码放到指定的目录
-WORKDIR /dome
-ADD . /dome
-# 第三阶段:执行脚本
-CMD ["python", "/dome/dome.py"]  
+ENV LANG=C.UTF-8
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+    && apk update \
+    && apk add --no-cache vim
+
+RUN pip install fastapi pydantic PyYAML requests pandas uvicorn starlette
+
+WORKDIR /opt/tool_platform
+
+CMD [ "tail", "-f", "/dev/null" ]
